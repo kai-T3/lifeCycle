@@ -2,10 +2,10 @@ package com.example.activitylifecycle
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.activitylifecycle.mymodels.MyData
 
@@ -22,21 +22,32 @@ class MainActivity : AppCompatActivity() {
         myValue = ViewModelProvider(this).get(com.example.activitylifecycle.mymodels.MyData::class.java)
 
         val btn: Button = findViewById(R.id.btnOk)
-        val tv: TextView = findViewById(R.id.tvResult)
+        val tvName: TextView = findViewById(R.id.tvName)
+        val tvAge: TextView = findViewById(R.id.tvAge)
+
+        myValue.name.observe(this, Observer {
+            newName -> tvName.text = newName
+        })
+        myValue.age.observe(this, Observer {
+                newAge -> tvAge.text = newAge.toString()
+        })
 
 //        //if null, first time
 //        if(savedInstanceState != null){
 //            myValue = savedInstanceState.getString("value").toString();
 //            tv.text = myValue
 //        }
-        if (myValue!= null){
-            tv.text = myValue.name
+
+        if (myValue.name.value!= ""){
+            //tv.text = myValue.name.value.toString()
         }
+
         btn.setOnClickListener(){
-            myValue.name = "John"
-            myValue.age = 21
-            //after clicking btn OK
-            tv.text = myValue.name
+            myValue.name.value = "John"
+            myValue.age.value = 21
+            //display()
+//            //after clicking btn OK
+//            tv.text = myValue.name
         }
     }
 
@@ -45,6 +56,11 @@ class MainActivity : AppCompatActivity() {
 //        super.onSaveInstanceState(outState)
 //        outState.putString("value", myValue)
 //    }
+
+//    fun display(){
+//        val tv: TextView = findViewById(R.id.tvResult)
+//    }
+
 
     override fun onStart() {
         super.onStart()
